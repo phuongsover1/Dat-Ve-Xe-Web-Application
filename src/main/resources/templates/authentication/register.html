@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{header :: head}">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- NAV BAR-->
+<nav th:replace="~{header :: header}"></nav>
+<!-- END NAV BAR-->
+
+<!------------------------------------------------------- XU LY ----------------------------------------------------->
+
+<div class="container">
+    <h3 class="text-center mt-4">THÔNG TIN TÀI KHOẢN</h3>
+
+    <th:block th:if="${param.tontaiTK != null }">
+        <div class="alert alert-danger" role="alert">Số điện thoại đã
+            tồn tại.
+        </div>
+    </th:block>
+
+    <th:block th:if="${param.tontaiUser != null }">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text" th:inline="text">
+                    Số điện thoại này đã từng được anh/chị [[${tempUser.hoTen }]] đặt vé tại quầy nhưng chưa tạo tài
+                    khoản.<br/>
+                    Thông tin tài khoản bạn có thể chỉnh sửa sau khi đăng kí<br/>
+                    Bạn có muôn tạo tài khoản này với mật khẩu vừa đặt?<br/>
+
+                </p>
+            </div>
+            <div class="card-footer">
+                <form
+                        th:action="@{/saveNewAccount}"
+                        method="POST" th:object="${tempAccount}">
+                    <a class="btn btn-warning"
+                       th:href="@{/showRegisterPage}">Không</a>
+                    <input type="submit" value="Đồng ý" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+
+
+    </th:block>
+
+
+    <form th:action="@{/saveNewUser}"
+          method="POST" class="m-auto mt-5" style="width: 400px;"
+          th:object="${newUser}"
+    >
+        <div class="mb-3">
+            <label for="nameInput" class="form-label">Họ tên *</label>
+            <input type="text" class="form-control" id="nameInput"
+                   th:field="*{hoTen}"
+            >
+            <br/>
+        </div>
+        <div th:object="${newAccount}">
+            <div class="mb-3">
+                <label for="phoneInput" class="form-label">Số điện thoại *</label>
+                <input type="text" class="form-control" id="phoneInput"
+                       th:field="*{username}"
+                >
+                <br/>
+            </div>
+
+            <div class="mb-3">
+                <label for="passwordInput" class="form-label">Password *</label>
+
+                <input type="password" class="form-control" id="passwordInput"
+                       th:field="*{password}"
+                >
+                <br/>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="emailInput" class="form-label">Email *</label>
+            <input type="email" class="form-control" id="emailInput"
+                   th:field="*{email}"
+            >
+            <br/>
+
+        </div>
+
+        <div class="mb-3">
+            <label for="idNoInput" class="form-label">CMND/CCCD *</label>
+                <input type="text" class="form-control" id="idNoInput"
+                       th:field="*{cmnd}"
+                       >
+                <br/>
+
+        </div>
+
+        <div class="mb-3">
+            <label for="addressInput" class="form-label">Địa chỉ *</label>
+                <input type="text" class="form-control" id="addressInput"
+                       th:field="*{diaChi}"
+                       >
+                <br/>
+
+        </div>
+
+        <button type="submit" class="btn btn-outline-success float-end">Đăng
+            ký
+        </button>
+
+    </form>
+</div>
+<div class="clearfix"></div>
+<!--------------------------------------------------- END XU LY ------------------------------------------------------------>
+<!-- FOOTER -->
+<footer th:replace="~{footer :: footer}"></footer>
+<!-- END FOOTER-->
+<!-- SCRIPTS -->
+<th:block th:replace="~{footer :: scripts}"></th:block>
+<!-- END SCRIPTS -->
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{header :: head}">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- NAV BAR-->
+<nav th:replace="~{header :: header}"></nav>
+<!-- END NAV BAR-->
+
+<!------------------------------------------------------- XU LY ----------------------------------------------------->
+
+<div class="container mt-5">
+
+    <!-- Danh sách các button nghiệp vụ  -->
+    <div class="d-flex justify-content-around">
+        <a th:href="@{/nhanvien/nghiepVu(themXeMoi=true)}" class="btn btn-primary">
+            Thêm Xe Mới</a>
+        <a th:href="@{/nhanvien/nghiepVu(themChuyenXeMoi=true)}" class="btn btn-primary">
+            Thêm Chuyến Xe Mới</a>
+        <a th:href="@{/nhanvien/nghiepVu(danhDauXe=true)}" class="btn btn-primary">
+            Đánh Dấu Xe Đã Hoàn Thành Chuyến Xe</a>
+    </div>
+
+
+    <!-- Thêm xe mới tab -->
+    <th:block th:if="${param.themXeMoi }">
+        <div class="my-3" id="themXeMoiDiv">
+            <th:block th:if="${param.themXeMoi != null}">
+                <th:block th:if="${param.thanhCong != null} and ${param.thanhCong.equals('true')}">
+                    <div class="alert alert-success my-3" role="alert">
+                        <h5>Đã thêm xe mới thành công!</h5>
+                    </div>
+                </th:block>
+            </th:block>
+
+            <th:block th:if="${param.themXeMoi != null}">
+                <th:block th:if="${param.thanhCong != null} and ${param.thanhCong.equals('false')}">
+                    <th:block>
+                        <div class="alert alert-danger my-3" role="alert">
+                            <h5>Biển số xe đã tồn tại !</h5>
+                        </div>
+
+                    </th:block>
+                </th:block>
+            </th:block>
+            <form
+                    th:action="@{/nhanvien/themXeMoi}"
+                    method="POST" th:object="${xeMoi}">
+                <div class="mb-3">
+                    <label for="bienSoXeInput" class="form-label">Biển số xe:</label>
+                    <input th:field="*{bienSoXe}" class="form-control"
+                           id="bienSoXeInput"/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="loaiXeSelect" class="form-label">Loại xe:</label>
+                    <select
+                            class="form-select" id="loaiXeSelect" name="loaiXe">
+                        <th:block th:each="item : ${listLoaiXe }">
+                            <option th:value="${item.idLoaiXe }" th:text="${item.tenLoai }"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <input type="submit" class="btn btn-success btn-lg mt-3" value="Thêm"/>
+            </form>
+        </div>
+    </th:block>
+    <!-- x END thêm xe mới tab x -->
+
+    <!-- Thêm chuyến xe mới tab -->
+    <th:block th:if="${param.themChuyenXeMoi }">
+        <div class="my-3" id="themXeMoiDiv">
+            <th:block th:if="${param.thanhCong}">
+                <div class="alert alert-success my-3" role="alert">
+                    <h5>Đã thêm chuyến xe mới thành công!</h5>
+                </div>
+            </th:block>
+
+            <th:block th:if="${param.tonTaiXe != null} and ${param.tonTaiXe.equals('false') }">
+                <div class="alert alert-danger my-3" role="alert">
+                    <h5>Biển số xe đã không tồn tại!</h5>
+                </div>
+            </th:block>
+            <th:block th:if="${param.tonTaiChuyenXe != null} and ${param.tonTaiChuyenXe.equals('true') }">
+                <div class="alert alert-danger my-3" role="alert">
+                    <h5>Biển số xe này đang chạy cho một chuyến xe nào đó và vẫn chưa xong !</h5>
+                </div>
+            </th:block>
+            <form
+                    th:action="@{/nhanvien/themChuyenXeMoi}"
+                    method="POST">
+                <div class="mb-3">
+                    <label for="bienSoXeInput" class="form-label">Nhập Biển Số Xe:</label>
+                    <input type="text" class="form-control" id="bienSoXeInput" name="bienSoXe"/>
+                </div>
+
+                <div class="mb-3">
+
+                    <label for="chonTuyenXe" class="form-label">Chọn Tuyến Xe:</label>
+                    <select class="form-select" id="chonTuyenXe" name="tuyenXe"
+                            style="font-family: 'FontAwesome', 'Second Font name';">
+
+                        <th:block th:each="tuyenXe : ${tuyenXeList }">
+                            <option th:value="|${tuyenXe.diaDiemDi.idDiaDiem },${tuyenXe.diaDiemDen.idDiaDiem}|"
+                                    th:inline="text">
+                                [[${tuyenXe.diaDiemDi.tenDiaDiem }]] &#xf30b; [[${tuyenXe.diaDiemDen.tenDiaDiem }]]
+                            </option>
+                        </th:block>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="ngayChayInput" class="form-label">Chọn Ngày Khởi Hành:</label>
+                    <input type="date" onkeydown="return false" class="form-control fromToday" id="ngayChayInput"
+                           name="ngayChay"/>
+                </div>
+
+                <!-- Thời gian chạy -->
+                <div class="my-4">
+                    <div class="form-label">Giờ chạy:</div>
+                    <div class="row">
+                        <input type="text" name="hh" placeholder="Giờ"
+                               class="form-control mx-3" style="width: 100px;" value="" required>
+                        <input type="text" name="mm" placeholder="Phút"
+                               class="form-control" style="width: 100px;" value="" required>
+                        <div class="invalid-feedback">Xin vui lòng nhập giờ, phút hợp lệ.</div>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-success btn-lg mt-3" value="Thêm"/>
+            </form>
+        </div>
+    </th:block>
+    <!-- x END thêm chuyến xe mới tab x -->
+
+    <!-- đánh dấu xe đã hoàn thành chuyến -->
+    <th:block th:if="${param.danhDauXe }">
+        <table class="table table-primary table-striped mt-4">
+            <thead>
+            <tr>
+                <th scope="col">Biển số xe</th>
+                <th scope="col">Chuyến xe</th>
+                <th scope="col">Ngày chạy</th>
+                <th scope="col">Giờ chạy</th>
+                <th scope="col">Đánh dấu</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="chuyenXe : ${ listChuyenXeChuaHoanThanh}">
+                <tr>
+                    <td th:text="${chuyenXe.maXe.bienSoXe }"></td>
+                    <td style="font-family: 'FontAwesome', 'Second Font name';" th:inline="text">
+                        [[${chuyenXe.maTuyen.diaDiemDi.tenDiaDiem }]]
+                        &#xf30b; [[${chuyenXe.maTuyen.diaDiemDen.tenDiaDiem }]]
+                    </td>
+
+                    <th:block >
+                        <td th:text="${#strings.substring(chuyenXe.gioChay, 0, 10)}"></td>
+                        <td th:text="${#strings.substring(chuyenXe.gioChay, 11)}"></td>
+<!--                        <td th:text="${#dates.format(${chuyenXe.gioChay}, 'dd-MM-yyyy')}">></td>-->
+<!--                        <td th:text="${#dates.format(${chuyenXe.gioChay}, 'HH:mm')}">></td>-->
+                        <td>
+                            <form th:action="@{/nhanvien/danhDauChuyenXe}" method="POST">
+                                <input type="hidden" name="idChuyenXe"
+                                       th:value="${chuyenXe.maChuyen }"/> <!-- bỏ id chuyến xe vào đây -->
+                                <input type="submit" value="Đã hoàn thành" class="btn btn-warning"/>
+                            </form>
+                        </td>
+                    </th:block>
+                </tr>
+
+            </th:block>
+            </tbody>
+        </table>
+    </th:block>
+    <!-- x end đánh dấu xe đã hoàn thành chuyến -->
+
+
+    <!--------------------------------------------------- END XU LY ------------------------------------------------------------>
+    <!-- FOOTER -->
+    <footer th:replace="~{footer :: footer}"></footer>
+    <!-- END FOOTER-->
+    <!-- SCRIPTS -->
+    <th:block th:replace="~{footer :: scripts}"></th:block>
+    <!-- END SCRIPTS -->
+</body>
+</html>

@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: Đặt Vé Xe
+
+
+---
+jdbc:
+  driver: org.mariadb.jdbc.Driver
+  url: jdbc:mariadb://test_db:3306/dat_ve_xe
+  user: root
+  password: root
+
+---
+
+hibernate:
+  show_sql: false
+  packagesToScan: com.example.demo.entity
+  hbm2ddl:
+    auto: none
+  current_session_context_class: thread

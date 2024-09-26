@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{header :: head}">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- NAV BAR-->
+<nav th:replace="~{header :: header}"></nav>
+<!-- END NAV BAR-->
+
+<!------------------------------------------------------- XU LY ----------------------------------------------------->
+
+<!-- CHO TÀI KHOẢN KHÁCH HÀNG -->
+<th:block sec:authorize="hasRole('USER')">
+    <div class="container ">
+        <h3 class="text-center my-4">Thông tin cá nhân</h3>
+        <div class="row mt-5">
+            <div class="col-12 col-md-8 col-xl-6">
+                <div class="card m-auto " style="max-width: 700px;">
+                    <div class="card-header text-muted">THÔNG TIN CÁ NHÂN</div>
+                    <div class="card-body">
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">Họ và Tên:</div>
+                            <div class="col-7" th:text="${user.hoTen}"></div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">Email:</div>
+                            <div class="col-7" th:text="${user.email }"></div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">Số điện thoại:</div>
+                            <div class="col-7" th:text="${user.phoneNumber }"></div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">CMND/CCCD:</div>
+                            <div class="col-7" th:text="${user.cmnd }"></div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">Giới tính:</div>
+                            <th:block th:switch="${user.gioiTinh}">
+                                <th:block th:case="null">
+                                    <div class="col-7 text-muted">Chưa có thông tin</div>
+                                </th:block>
+                                <th:block th:case="*">
+                                    <div class="col-7" th:text="${user.gioiTinh }"></div>
+                                </th:block>
+                            </th:block>
+
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">Ngày sinh:</div>
+                            <th:block th:switch="${user.ngaySinh}">
+                                <th:block th:case="null">
+                                    <div class="col-7 text-muted">Chưa có thông tin</div>
+                                </th:block>
+                                <th:block th:case="*">
+                                    <div class="col-7" th:text="${user.ngaySinh }"></div>
+                                </th:block>
+                            </th:block>
+
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">Nghề nghiệp:</div>
+                            <th:block th:switch="${user.ngheNghiep}">
+                                <th:block th:case="null">
+                                    <div class="col-7 text-muted">Chưa có thông tin</div>
+                                </th:block>
+                                <th:block th:case="*">
+                                    <div class="col-7"  th:text="${user.ngheNghiep }"></div>
+                                </th:block>
+                            </th:block>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div
+                    class="col-12 col-md-4 col-xl-6 d-flex justify-content-center align-items-center">
+                <a class="my-4 mt-md-0 btn btn-success"
+                   th:href="@{/user/changeUserInfo(userId=${user.userId})}">
+                    Cập nhật thông tin</a>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+
+<!-- CHO NHÂN VIÊN -->
+<th:block sec:authorize="hasRole('EMPLOYEE')" >
+    <div class="container ">
+        <h3 class="text-center my-4">Thông tin cá nhân</h3>
+        <div class="row mt-5">
+            <div class="col-12 col-md-8 col-xl-6">
+                <div class="card m-auto " style="max-width: 700px;">
+                    <div class="card-header text-muted">THÔNG TIN CÁ NHÂN</div>
+                    <div class="card-body">
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">Họ và Tên:</div>
+                            <div class="col-7" th:text="${nhanVien.hoTen}"></div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">Email:</div>
+                            <div class="col-7" th:text="${nhanVien.email }"></div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">Số điện thoại:</div>
+                            <div class="col-7" th:text="${nhanVien.soDienThoai }"></div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">CMND/CCCD:</div>
+                            <div class="col-7" th:text="${nhanVien.cmnd }"></div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">Giới tính:</div>
+                            <div class="col-7" th:text="${nhanVien.gioiTinh }"></div>
+                        </div>
+
+                        <div class="row my-4">
+                            <div class="col-5 text-muted">Ngày sinh:</div>
+                            <th:block th:switch="${nhanVien.ngaySinh}">
+                                <th:block th:case="null">
+                                    <div class="col-7 text-muted">Chưa có thông tin</div>
+                                </th:block>
+                                <th:block th:case="*">
+                                    <div class="col-7" th:text="${nhanVien.ngaySinh }"></div>
+                                </th:block>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                    class="col-12 col-md-4 col-xl-6 d-flex justify-content-center align-items-center">
+                <a class="my-4 mt-md-0 btn btn-success"
+                   th:href="@{/nhanvien/changeInfo}">Cập
+                    nhật thông tin</a>
+            </div>
+        </div>
+    </div>
+</th:block>
+<!--------------------------------------------------- END XU LY ------------------------------------------------------------>
+<!-- FOOTER -->
+<footer th:replace="~{footer :: footer}"></footer>
+<!-- END FOOTER-->
+<!-- SCRIPTS -->
+<th:block th:replace="~{footer :: scripts}"></th:block>
+<!-- END SCRIPTS -->
+</body>
+</html>

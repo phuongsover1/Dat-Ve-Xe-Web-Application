@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+>
+
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vé xe Phương Trang</title>
+    <script src="https://kit.fontawesome.com/9f1102c4bf.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" th:href="@{/img/london_bus.ico}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link th:href="@{/css/style.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<!-- ////////////////////////// Main Navbar-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="header">
+    <div class="container-fluid px-xl-5">
+        <img
+                th:src="@{/img/tiger left.png}"
+                class="img-fluid d-none d-xl-inline" style="width: 100px;" alt="">
+        <a class="pe-1" th:href="@{/}"><img
+                th:src="@{/img/logo.png}"
+                alt="" style="width: 200px;"></a>
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <ul class="navbar-nav w-100 justify-content-lg-between">
+                <li class="nav-item mx-2"><a
+                        class="nav-link px-0 fw-bolder text-uppercase" th:href="@{/}">Trang
+                    Chủ</a></li>
+                <li class="nav-item mx-3 "><a
+                        class="nav-link  px-0 fw-bolder text-uppercase" href="#">Lịch
+                    trình</a></li>
+                <li class="nav-item mx-3"><a
+                        class="nav-link  px-0 fw-bolder text-uppercase" href="#">Tin
+                    tức</a></li>
+
+                <li class="nav-item mx-3"><a
+                        class="nav-link  px-0 fw-bolder text-uppercase" href="#">Liên
+                    hệ</a></li>
+
+                <li class="nav-item mx-3 mr-5"><a
+                        class="nav-link  px-0 fw-bolder text-uppercase" href="#">Về
+                    chúng tôi</a></li>
+                <!-- //////////////// nút đăng nhập -->
+
+                <!-- Chưa đăng nhập thì hiện cái này -->
+                <div sec:authorize="isAnonymous()">
+                    <a th:href="@{/showLoginPage}"
+                       class="btn btn-warning d-inline-block mr-auto fw-bold"> <i
+                            class="fas fa-user-circle"></i> Đăng nhập
+                    </a>
+                </div>
+
+
+                <!-- Nếu đã đăng nhập mà là khách hàng rồi thì hiện cái này -->
+                <div sec:authorize="hasRole('USER')">
+
+                    <li class="nav-item dropdown">
+                        <a
+                                class="nav-link dropdown-toggle btn btn-warning d-inline-block mr-auto p-2 fw-bold"
+                                role="button"
+                                data-bs-toggle="dropdown" href="#"
+                        >
+                            <i class="fas fa-user-circle"> </i>
+                            <span th:text="${user.hoTen}"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                   th:href="@{/user/showInfo}"><i
+                                    class="fas fa-user"></i> Thông tin tài khoản</a></li>
+                            <li><a class="dropdown-item"
+                                   th:href="@{/user/userBookedTickets}"><i
+                                    class="fas fa-history d-inline-block"></i> Các vé đã đặt</a></li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <form id="form2"
+                                  th:action="@{/logout}"
+                                  method="POST">
+                                <li>
+                                    <button type="submit" class="dropdown-item" form="form2">
+                                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                    </button>
+                                </li>
+                            </form>
+
+
+                        </ul>
+                    </li>
+                </div>
+                <!--  Nếu đã đăng nhập mà là nhân viên thanh toán thì hiện cái này -->
+                <div sec:authorize="hasRole('EMPLOYEE')">
+                    <li class="nav-item dropdown">
+                        <a
+                                class="nav-link dropdown-toggle btn btn-warning d-inline-block mr-auto p-2 fw-bold"
+                                role="button"
+                                data-bs-toggle="dropdown" href="#"
+                        >
+                            <i class="fas fa-user-circle"> </i>
+                            <span th:text="${nhanVien.hoTen}"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                   th:href="@{/nhanvien/showInfo}"><i
+                                    class="fas fa-user"></i> Thông tin tài khoản</a></li>
+                            <li><a class="dropdown-item"
+                                   th:href="@{/nhanvien/veChuaThanhToan}"><i
+                                    class="fas fa-history d-inline-block"></i> Thanh toán vé</a></li>
+
+                            <li><a class="dropdown-item" th:href="@{/nhanvien/nghiepVu}"><i
+                                    class="fas fa-bus-alt"></i> Thêm chuyến xe</a></li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <form id="form1"
+                                  th:action="@{/logout}"
+                                  method="POST">
+                                <li>
+                                    <button type="submit" class="dropdown-item" form="form1">
+                                        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                    </button>
+                                </li>
+                            </form>
+                        </ul>
+                    </li>
+                </div>
+
+            </ul>
+        </div>
+        <img
+                th:src="@{/img/tiger right.png}"
+                class="img-fluid d-none d-xl-inline" style="width: 100px;" alt="">
+    </div>
+</nav>
+</body>
+</html>
+
